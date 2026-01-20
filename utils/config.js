@@ -18,7 +18,9 @@ const config = {
     bot: {
         name: process.env.BOT_NAME || 'REZERO-MD',
         prefix: process.env.PREFIX || '.',
-        sessionId: process.env.SESSION_ID || ''
+        sessionId: process.env.SESSION_ID || '',
+        usePairingCode: process.env.USE_PAIRING_CODE === 'true',
+        pairingNumber: process.env.PAIRING_NUMBER || ''
     },
 
     // Session Configuration

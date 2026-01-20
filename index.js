@@ -57,11 +57,13 @@ const client = new Client({
 
 // QR Code event
 client.on('qr', (qr) => {
-    logger.info('QR Code received! Scan with WhatsApp:');
-    console.log('');
-    qrcode.generate(qr, { small: true });
-    console.log('');
-    logger.info('Scan the QR code above with WhatsApp to login');
+    if (!config.bot.usePairingCode) {
+        logger.info('QR Code received! Scan with WhatsApp:');
+        console.log('');
+        qrcode.generate(qr, { small: true });
+        console.log('');
+        logger.info('Scan the QR code above with WhatsApp to login');
+    }
 });
 
 // Ready event
@@ -162,4 +164,25 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // Initialize client
 logger.info('Starting REZERO-MD...');
-client.initialize();
+client.initialize().then(async () => {
+    if (config.bot.usePairingCode && !sessionHandler.sessionExists()) {
+        const pairingNumber = config.bot.pairingNumber;
+        if (!pairingNumber) {
+            logger.error('PAIRING_NUMBER is not set in .env file!');
+            return;
+        }
+        
+        logger.info(`Requesting pairing code for: ${pairingNumber}...`);
+        try {
+            const code = await client.requestPairingCode(pairingNumber);
+            console.log('\n╔════════════════════════════════════════╗');
+            console.log('║          WHATSAPP PAIRING CODE         ║');
+            console.log('╠════════════════════════════════════════╣');
+            console.log(`║          CODE: ${code}            ║`);
+            console.log('╚════════════════════════════════════════╝\n');
+            logger.info('Enter this code in your WhatsApp (Linked Devices > Link with Phone Number)');
+        } catch (err) {
+            logger.error('Failed to request pairing code: ' + err.message);
+        }
+    }
+});
