@@ -9,7 +9,7 @@ session/
 .wwebjs_cache/
 
 # Environment variables
-.env
+# .env (Removed from ignore as per user request)
 
 # Logs
 *.log
