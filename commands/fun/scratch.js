@@ -2,6 +2,7 @@ const { formatMoney, getRandomInt } = require('../../utils/permissions');
 
 module.exports = {
     name: 'scratch',
+    category: 'fun',
     description: 'Buy and scratch a lottery card',
     aliases: ['scratchcard'],
     async execute(message, args, client) {

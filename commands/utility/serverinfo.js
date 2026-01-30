@@ -1,5 +1,6 @@
 module.exports = {
     name: 'serverinfo',
+    category: 'utility',
     description: 'Show server information',
     aliases: ['si', 'server'],
     async execute(message, args, client) {

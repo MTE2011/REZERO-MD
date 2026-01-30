@@ -2,6 +2,7 @@ const { formatMoney } = require('../../utils/permissions');
 
 module.exports = {
     name: 'give',
+    category: 'economy',
     description: 'Give money to another user',
     aliases: ['pay', 'send'],
     async execute(message, args, client) {

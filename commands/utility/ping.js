@@ -1,5 +1,6 @@
 module.exports = {
     name: 'ping',
+    category: 'utility',
     description: 'Check bot latency',
     async execute(message, args, client) {
         const sent = await message.reply('🏓 Pinging...');

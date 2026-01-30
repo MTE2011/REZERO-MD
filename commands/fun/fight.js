@@ -2,6 +2,7 @@ const { formatMoney, getRandomInt } = require('../../utils/permissions');
 
 module.exports = {
     name: 'fight',
+    category: 'fun',
     description: 'Fight another user',
     async execute(message, args, client) {
         const target = message.mentions.users.first();

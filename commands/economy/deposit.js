@@ -2,6 +2,7 @@ const { formatMoney } = require('../../utils/permissions');
 
 module.exports = {
     name: 'deposit',
+    category: 'economy',
     description: 'Deposit money to your bank',
     aliases: ['dep'],
     async execute(message, args, client) {

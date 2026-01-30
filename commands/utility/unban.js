@@ -2,6 +2,7 @@ const { isGuard } = require('../../utils/permissions');
 
 module.exports = {
     name: 'unban',
+    category: 'utility',
     description: 'Unban a user (Guards only)',
     async execute(message, args, client) {
         if (!isGuard(message.author.id)) {

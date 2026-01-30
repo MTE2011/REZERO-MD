@@ -2,6 +2,7 @@ const { formatMoney, getCooldownTime, formatTime, getRandomInt } = require('../.
 
 module.exports = {
     name: 'rob',
+    category: 'economy',
     description: 'Rob another user',
     async execute(message, args, client) {
         const target = message.mentions.users.first();

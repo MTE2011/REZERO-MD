@@ -2,6 +2,7 @@ const { formatMoney } = require('../../utils/permissions');
 
 module.exports = {
     name: 'lottery',
+    category: 'fun',
     description: 'Buy a lottery ticket',
     async execute(message, args, client) {
         const ticketPrice = 500;

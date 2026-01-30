@@ -2,6 +2,7 @@ const { isGuard } = require('../../utils/permissions');
 
 module.exports = {
     name: 'mute',
+    category: 'utility',
     description: 'Timeout a user (Guards only)',
     async execute(message, args, client) {
         if (!isGuard(message.author.id)) {

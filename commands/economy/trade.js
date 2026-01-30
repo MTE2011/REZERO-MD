@@ -1,5 +1,6 @@
 module.exports = {
     name: 'trade',
+    category: 'economy',
     description: 'Trade items with another user',
     async execute(message, args, client) {
         const target = message.mentions.users.first();

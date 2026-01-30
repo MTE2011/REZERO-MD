@@ -2,6 +2,7 @@ const { isOwner } = require('../../utils/permissions');
 
 module.exports = {
     name: 'additem',
+    category: 'shop',
     description: 'Add an item to the shop (Owner only)',
     async execute(message, args, client) {
         if (!isOwner(message.author.id)) {

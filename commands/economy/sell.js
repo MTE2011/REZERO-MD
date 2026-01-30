@@ -2,6 +2,7 @@ const { formatMoney } = require('../../utils/permissions');
 
 module.exports = {
     name: 'sell',
+    category: 'economy',
     description: 'Sell an item from your inventory',
     async execute(message, args, client) {
         const itemName = args.join(' ');

@@ -2,6 +2,7 @@ const { formatMoney, getRandomInt } = require('../../utils/permissions');
 
 module.exports = {
     name: 'blackjack',
+    category: 'fun',
     description: 'Play blackjack',
     aliases: ['bj', '21'],
     async execute(message, args, client) {

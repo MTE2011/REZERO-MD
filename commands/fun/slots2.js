@@ -2,6 +2,7 @@ const { formatMoney, getRandomInt } = require('../../utils/permissions');
 
 module.exports = {
     name: 'slots2',
+    category: 'fun',
     description: 'Alternative slot machine with different symbols',
     async execute(message, args, client) {
         const amount = parseInt(args[0]);

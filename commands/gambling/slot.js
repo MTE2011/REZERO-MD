@@ -2,6 +2,7 @@ const { isGamblingChannel, formatMoney, getRandomInt } = require('../../utils/pe
 
 module.exports = {
     name: 'slot',
+    category: 'gambling',
     description: 'Play the slot machine',
     aliases: ['slots'],
     async execute(message, args, client) {

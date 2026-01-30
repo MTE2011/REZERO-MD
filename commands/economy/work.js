@@ -2,6 +2,7 @@ const { formatMoney, getCooldownTime, formatTime, getRandomInt } = require('../.
 
 module.exports = {
     name: 'work',
+    category: 'economy',
     description: 'Work to earn money',
     async execute(message, args, client) {
         const user = client.db.getUser(message.author.id);

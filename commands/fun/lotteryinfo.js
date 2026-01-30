@@ -2,6 +2,7 @@ const { formatMoney } = require('../../utils/permissions');
 
 module.exports = {
     name: 'lotteryinfo',
+    category: 'fun',
     description: 'Check lottery information',
     aliases: ['linfo'],
     async execute(message, args, client) {

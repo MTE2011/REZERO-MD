@@ -2,6 +2,7 @@ const { formatMoney } = require('../../utils/permissions');
 
 module.exports = {
     name: 'withdraw',
+    category: 'economy',
     description: 'Withdraw money from your bank',
     aliases: ['wd', 'with'],
     async execute(message, args, client) {

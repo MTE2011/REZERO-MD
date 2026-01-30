@@ -2,6 +2,7 @@ const { isGamblingChannel, formatMoney, getRandomInt } = require('../../utils/pe
 
 module.exports = {
     name: 'coinflip',
+    category: 'gambling',
     description: 'Flip a coin - heads or tails',
     aliases: ['cf', 'flip'],
     async execute(message, args, client) {

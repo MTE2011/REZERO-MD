@@ -2,6 +2,7 @@ const { formatMoney } = require('../../utils/permissions');
 
 module.exports = {
     name: 'profile',
+    category: 'economy',
     description: 'View your profile',
     aliases: ['prof', 'stats'],
     async execute(message, args, client) {

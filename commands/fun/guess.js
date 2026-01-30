@@ -2,6 +2,7 @@ const { formatMoney, getRandomInt } = require('../../utils/permissions');
 
 module.exports = {
     name: 'guess',
+    category: 'fun',
     description: 'Guess a number between 1-10',
     async execute(message, args, client) {
         const amount = parseInt(args[0]);

@@ -2,6 +2,7 @@ const { isGamblingChannel, formatMoney, getRandomInt } = require('../../utils/pe
 
 module.exports = {
     name: 'gamble',
+    category: 'gambling',
     description: 'Gamble your money with varying multipliers',
     async execute(message, args, client) {
         // Check if command is used in gambling channel

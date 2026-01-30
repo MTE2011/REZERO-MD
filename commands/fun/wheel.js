@@ -2,6 +2,7 @@ const { formatMoney, getRandomInt } = require('../../utils/permissions');
 
 module.exports = {
     name: 'wheel',
+    category: 'fun',
     description: 'Spin the wheel of fortune',
     aliases: ['spin'],
     async execute(message, args, client) {

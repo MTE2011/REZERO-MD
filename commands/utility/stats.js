@@ -1,5 +1,6 @@
 module.exports = {
     name: 'stats',
+    category: 'utility',
     description: 'Show bot statistics',
     async execute(message, args, client) {
         const uptime = process.uptime();

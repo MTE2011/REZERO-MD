@@ -2,6 +2,7 @@ const { formatMoney, getRandomInt } = require('../../utils/permissions');
 
 module.exports = {
     name: 'highlow',
+    category: 'fun',
     description: 'Guess if the next card is higher or lower',
     aliases: ['hl'],
     async execute(message, args, client) {

@@ -2,6 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelect
 
 module.exports = {
     name: 'tsetup',
+    category: 'ticket',
     description: 'Setup the ticket panel (Owner only)',
     async execute(message, args, client) {
         if (message.author.id !== process.env.OWNER_ID) {

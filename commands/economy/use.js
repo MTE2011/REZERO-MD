@@ -1,5 +1,6 @@
 module.exports = {
     name: 'use',
+    category: 'economy',
     description: 'Use an item from your inventory',
     async execute(message, args, client) {
         const itemName = args.join(' ');

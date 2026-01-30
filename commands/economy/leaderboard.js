@@ -2,6 +2,7 @@ const { formatMoney } = require('../../utils/permissions');
 
 module.exports = {
     name: 'leaderboard',
+    category: 'economy',
     description: 'View the richest users',
     aliases: ['lb', 'top', 'rich'],
     async execute(message, args, client) {

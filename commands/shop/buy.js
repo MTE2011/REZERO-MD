@@ -2,6 +2,7 @@ const { formatMoney } = require('../../utils/permissions');
 
 module.exports = {
     name: 'buy',
+    category: 'shop',
     description: 'Buy an item from the shop',
     async execute(message, args, client) {
         const itemId = args[0];

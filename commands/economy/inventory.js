@@ -1,5 +1,6 @@
 module.exports = {
     name: 'inventory',
+    category: 'economy',
     description: 'View your inventory',
     aliases: ['inv', 'items'],
     async execute(message, args, client) {

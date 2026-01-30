@@ -2,6 +2,7 @@ const { formatMoney, getCooldownTime, formatTime } = require('../../utils/permis
 
 module.exports = {
     name: 'daily',
+    category: 'economy',
     description: 'Claim your daily reward',
     async execute(message, args, client) {
         const user = client.db.getUser(message.author.id);

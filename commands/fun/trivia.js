@@ -2,6 +2,7 @@ const { formatMoney, getRandomInt } = require('../../utils/permissions');
 
 module.exports = {
     name: 'trivia',
+    category: 'fun',
     description: 'Answer trivia questions for money',
     async execute(message, args, client) {
         const questions = [

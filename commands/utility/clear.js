@@ -2,6 +2,7 @@ const { isGuard } = require('../../utils/permissions');
 
 module.exports = {
     name: 'clear',
+    category: 'utility',
     description: 'Clear messages (Guards only)',
     aliases: ['purge', 'delete'],
     async execute(message, args, client) {

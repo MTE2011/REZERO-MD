@@ -1,5 +1,6 @@
 module.exports = {
     name: 'userinfo',
+    category: 'utility',
     description: 'Show user information',
     aliases: ['ui', 'whois'],
     async execute(message, args, client) {
