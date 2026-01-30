@@ -3,81 +3,113 @@ const { ChannelType, PermissionsBitField, PermissionFlagsBits } = require('disco
 module.exports = {
     name: 'creatzz',
     category: 'utility',
-    description: 'Creates a server structure with 30 channels using decorative fonts',
+    description: 'Creates a cool server structure with 40 channels using different fonts',
     async execute(message, args, client) {
         if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
             return message.reply('❌ You need Administrator permissions to use this command!');
         }
 
         const guild = message.guild;
-        message.reply('🏗️ Starting server creation process with 30 decorative channels... This will take a moment.');
+        message.reply('🏗️ Starting server creation process with 40 cool channels... This will take a moment.');
+
+        // Font mappings for "cool" look
+        const fonts = {
+            bold: (str) => str.split('').map(c => {
+                const code = c.charCodeAt(0);
+                if (code >= 65 && code <= 90) return String.fromCodePoint(code + 119743);
+                if (code >= 97 && code <= 122) return String.fromCodePoint(code + 119737);
+                return c;
+            }).join(''),
+            script: (str) => str.split('').map(c => {
+                const code = c.charCodeAt(0);
+                if (code >= 65 && code <= 90) return String.fromCodePoint(code + 119951);
+                if (code >= 97 && code <= 122) return String.fromCodePoint(code + 119945);
+                return c;
+            }).join(''),
+            mono: (str) => str.split('').map(c => {
+                const code = c.charCodeAt(0);
+                if (code >= 65 && code <= 90) return String.fromCodePoint(code + 120363);
+                if (code >= 97 && code <= 122) return String.fromCodePoint(code + 120357);
+                return c;
+            }).join('')
+        };
 
         try {
             const categories = [
                 { 
-                    name: '╭・👑 ANNOUNCEMENTS', 
+                    name: `╭・${fonts.bold('INFORMATION')}`, 
                     channels: [
-                        { name: '┃・📢-news', type: ChannelType.GuildAnnouncement },
-                        { name: '┃・📢-updates', type: ChannelType.GuildAnnouncement },
-                        { name: '┃・📢-events', type: ChannelType.GuildAnnouncement },
-                        { name: '┃・📢-alerts', type: ChannelType.GuildAnnouncement },
-                        { name: '╰・📢-community', type: ChannelType.GuildAnnouncement }
+                        { name: `┃・📜-${fonts.mono('rules')}` },
+                        { name: `┃・📢-${fonts.mono('announcements')}`, type: ChannelType.GuildAnnouncement },
+                        { name: `┃・🔗-${fonts.mono('links')}` },
+                        { name: `┃・🎭-${fonts.mono('roles')}` },
+                        { name: `┃・👋-${fonts.mono('welcome')}` },
+                        { name: `╰・✨-${fonts.mono('boosts')}` }
                     ] 
                 },
                 { 
-                    name: '╭・💬 PUBLIC CHATS', 
+                    name: `╭・${fonts.bold('COMMUNITY')}`, 
                     channels: [
-                        { name: '┃・💬-general' },
-                        { name: '┃・💬-media' },
-                        { name: '┃・💬-memes' },
-                        { name: '┃・💬-gaming' },
-                        { name: '╰・💬-off-topic' }
+                        { name: `┃・💬-${fonts.script('general')}` },
+                        { name: `┃・📸-${fonts.script('media')}` },
+                        { name: `┃・🎭-${fonts.script('memes')}` },
+                        { name: `┃・🤖-${fonts.script('bot-usage')}` },
+                        { name: `┃・💭-${fonts.script('quotes')}` },
+                        { name: `┃・🎨-${fonts.script('art')}` },
+                        { name: `╰・🎮-${fonts.script('gaming')}` }
                     ] 
                 },
                 { 
-                    name: '╭・🎰 GAMBLING AREA', 
+                    name: `╭・${fonts.bold('ECONOMY AREA')}`, 
                     channels: [
-                        { name: '┃・💳-registration' },
-                        { name: '┃・🎰-gamble-1' },
-                        { name: '┃・🎰-gamble-2' },
-                        { name: '┃・🎰-gamble-3' },
-                        { name: '┃・🏆-leaderboard' },
-                        { name: '╰・🏪-shop' }
+                        { name: `┃・🏦-${fonts.mono('bank')}` },
+                        { name: `┃・🎰-${fonts.mono('gambling')}` },
+                        { name: `┃・🎲-${fonts.mono('dice-rolls')}` },
+                        { name: `┃・🃏-${fonts.mono('blackjack')}` },
+                        { name: `┃・🏪-${fonts.mono('shop')}` },
+                        { name: `┃・🏆-${fonts.mono('leaderboard')}` },
+                        { name: `╰・💼-${fonts.mono('jobs')}` }
                     ] 
                 },
                 { 
-                    name: '╭・🔊 VOICE CHATS', 
+                    name: `╭・${fonts.bold('VOICE CHANNELS')}`, 
                     channels: [
-                        { name: '┃・🔊-General-VC', type: ChannelType.GuildVoice },
-                        { name: '┃・🔊-Gaming-VC', type: ChannelType.GuildVoice },
-                        { name: '┃・🔊-Music-VC', type: ChannelType.GuildVoice },
-                        { name: '┃・🔊-Chill-VC', type: ChannelType.GuildVoice },
-                        { name: '┃・🔊-Streaming', type: ChannelType.GuildVoice },
-                        { name: '╰・💤-AFK', type: ChannelType.GuildVoice }
+                        { name: `┃・🔊-${fonts.script('Lounge')}`, type: ChannelType.GuildVoice },
+                        { name: `┃・🎮-${fonts.script('Gaming')}`, type: ChannelType.GuildVoice },
+                        { name: `┃・🎵-${fonts.script('Music')}`, type: ChannelType.GuildVoice },
+                        { name: `┃・💤-${fonts.script('AFK')}`, type: ChannelType.GuildVoice },
+                        { name: `┃・🎙️-${fonts.script('Stage')}`, type: ChannelType.GuildStageVoice },
+                        { name: `╰・🎧-${fonts.script('Private')}`, type: ChannelType.GuildVoice }
                     ] 
                 },
                 { 
-                    name: '╭・🛡️ STAFF ONLY', 
+                    name: `╭・${fonts.bold('SUPPORT')}`, 
+                    channels: [
+                        { name: `┃・🎫-${fonts.mono('tickets')}` },
+                        { name: `┃・❓-${fonts.mono('help')}` },
+                        { name: `┃・🛠️-${fonts.mono('bug-reports')}` },
+                        { name: `╰・💡-${fonts.mono('suggestions')}` }
+                    ] 
+                },
+                { 
+                    name: `╭・${fonts.bold('STAFF ZONE')}`, 
                     private: true,
                     channels: [
-                        { name: '┃・🛡️-owner-hq' },
-                        { name: '┃・🛡️-admin-chat' },
-                        { name: '┃・🛡️-mod-chat' },
-                        { name: '╰・🛡️-logs' }
-                    ] 
-                },
-                { 
-                    name: '╭・🎫 SUPPORT', 
-                    channels: [
-                        { name: '┃・🎫-open-ticket' },
-                        { name: '┃・❓-faq' },
-                        { name: '┃・🛠️-help-desk' },
-                        { name: '╰・📝-suggestions' }
+                        { name: `┃・🛡️-${fonts.bold('admin-hq')}` },
+                        { name: `┃・💬-${fonts.bold('staff-chat')}` },
+                        { name: `┃・📝-${fonts.bold('mod-logs')}` },
+                        { name: `┃・🔨-${fonts.bold('bans-appeals')}` },
+                        { name: `┃・📢-${fonts.bold('staff-ann')}` },
+                        { name: `┃・💾-${fonts.bold('database-logs')}` },
+                        { name: `┃・📂-${fonts.bold('archives')}` },
+                        { name: `┃・🔧-${fonts.bold('bot-config')}` },
+                        { name: `┃・🧪-${fonts.bold('testing')}` },
+                        { name: `╰・📈-${fonts.bold('analytics')}` }
                     ] 
                 }
             ];
 
-            // Total channels check: 5 + 5 + 6 + 6 + 4 + 4 = 30
+            // Total channels: 6 + 7 + 7 + 6 + 4 + 10 = 40
             
             for (const catData of categories) {
                 const permissionOverwrites = [];
@@ -105,7 +137,7 @@ module.exports = {
                 }
             }
 
-            message.reply('✅ Server structure with 30 decorative channels created successfully! 🚀');
+            message.reply('✅ Cool server structure with 40 channels and decorative fonts created successfully! 🚀');
         } catch (error) {
             console.error(error);
             message.reply(`❌ Failed to create server structure: ${error.message}`);

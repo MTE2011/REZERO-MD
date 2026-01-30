@@ -15,7 +15,7 @@ const client = new Client({
 });
 
 client.commands = new Collection();
-client.db = new Database(process.env.DATABASE_PATH || './data/database.json');
+client.db = new Database('./data');
 
 // Load commands
 const commandFolders = fs.readdirSync('./commands');

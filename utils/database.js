@@ -1,220 +1,199 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-class Database {
-    constructor(filePath) {
-        this.filePath = filePath;
+class MultiDatabase {
+    constructor(baseDir) {
+        this.baseDir = baseDir;
+        this.paths = {
+            profiles: path.join(baseDir, 'profiles.json'),
+            balances: path.join(baseDir, 'balances.json'),
+            timers: path.join(baseDir, 'timers.json'),
+            shop: path.join(baseDir, 'shop.json'),
+            lottery: path.join(baseDir, 'lottery.json'),
+            tickets: path.join(baseDir, 'tickets.json')
+        };
         this.data = {
-            users: {},
+            profiles: {},
+            balances: {},
+            timers: {},
             shop: {},
-            lottery: {
-                pot: 0,
-                tickets: []
-            },
+            lottery: { pot: 0, tickets: [] },
             tickets: {}
         };
     }
 
     async load() {
-        try {
-            const data = await fs.readFile(this.filePath, 'utf8');
-            this.data = JSON.parse(data);
-        } catch (error) {
-            if (error.code === 'ENOENT') {
-                await this.save();
-            } else {
-                console.error('Error loading database:', error);
+        for (const [key, filePath] of Object.entries(this.paths)) {
+            try {
+                const content = await fs.readFile(filePath, 'utf8');
+                this.data[key] = JSON.parse(content);
+            } catch (error) {
+                if (error.code === 'ENOENT') {
+                    await this.save(key);
+                } else {
+                    console.error(`Error loading ${key} database:`, error);
+                }
             }
         }
     }
 
-    async save() {
+    async save(key) {
         try {
-            // Sort users by ID for easier manual modification as requested
-            const sortedUsers = {};
-            Object.keys(this.data.users).sort().forEach(key => {
-                sortedUsers[key] = this.data.users[key];
-            });
-            this.data.users = sortedUsers;
+            const filePath = this.paths[key];
+            let dataToSave = this.data[key];
+            
+            if (['profiles', 'balances', 'timers'].includes(key)) {
+                const sorted = {};
+                Object.keys(dataToSave).sort().forEach(k => {
+                    sorted[k] = dataToSave[k];
+                });
+                dataToSave = sorted;
+            }
 
-            await fs.writeFile(this.filePath, JSON.stringify(this.data, null, 2));
+            await fs.writeFile(filePath, JSON.stringify(dataToSave, null, 2));
         } catch (error) {
-            console.error('Error saving database:', error);
+            console.error(`Error saving ${key} database:`, error);
         }
     }
 
     getUser(userId, username = 'Unknown') {
-        if (!this.data.users[userId]) {
-            this.data.users[userId] = {
-                info: {
-                    id: userId,
-                    name: username,
-                    registered: false,
-                    banned: false,
-                    role: 'USER',
-                    bio: 'No bio set.',
-                    age: 'Not set'
-                },
-                economy: {
-                    wallet: 1000,
-                    bank: 0,
-                    inventory: [],
-                    lastDaily: null,
-                    lastWeekly: null,
-                    lastWork: null,
-                    lastCrime: null
-                },
-                stats: {
-                    wins: 0,
-                    losses: 0,
-                    totalGambled: 0,
-                    level: 1,
-                    xp: 0
-                }
+        if (!this.data.profiles[userId]) {
+            this.data.profiles[userId] = {
+                id: userId,
+                name: username,
+                registered: false,
+                role: 'USER',
+                bio: 'No bio set.',
+                age: 'Not set',
+                banned: false
             };
-        } else {
-            // Ensure new structure exists for old users
-            if (!this.data.users[userId].info) {
-                const oldData = this.data.users[userId];
-                this.data.users[userId] = {
-                    info: {
-                        id: userId,
-                        name: username,
-                        registered: false,
-                        banned: false,
-                        role: 'USER',
-                        bio: 'No bio set.',
-                        age: 'Not set'
-                    },
-                    economy: {
-                        wallet: oldData.wallet || 1000,
-                        bank: oldData.bank || 0,
-                        inventory: oldData.inventory || [],
-                        lastDaily: oldData.lastDaily || null,
-                        lastWeekly: oldData.lastWeekly || null,
-                        lastWork: oldData.lastWork || null,
-                        lastCrime: oldData.lastCrime || null
-                    },
-                    stats: {
-                        wins: oldData.wins || 0,
-                        losses: oldData.losses || 0,
-                        totalGambled: oldData.totalGambled || 0,
-                        level: oldData.level || 1,
-                        xp: oldData.xp || 0
-                    }
-                };
-            }
-            // Update name if provided and different
-            if (username !== 'Unknown' && this.data.users[userId].info.name !== username) {
-                this.data.users[userId].info.name = username;
-            }
         }
-        return this.data.users[userId];
+        if (!this.data.balances[userId]) {
+            this.data.balances[userId] = {
+                wallet: 1000,
+                bank: 0,
+                inventory: []
+            };
+        }
+        if (!this.data.timers[userId]) {
+            this.data.timers[userId] = {
+                lastDaily: null,
+                lastWeekly: null,
+                lastWork: null,
+                lastCrime: null
+            };
+        }
+
+        const profile = this.data.profiles[userId];
+        const balance = this.data.balances[userId];
+        const timer = this.data.timers[userId];
+
+        return {
+            info: profile,
+            economy: {
+                ...balance,
+                ...timer
+            },
+            wallet: balance.wallet,
+            bank: balance.bank
+        };
     }
 
     async registerUser(userId, username, age) {
-        const user = this.getUser(userId, username);
-        user.info.registered = true;
-        user.info.name = username;
-        user.info.age = age;
-        await this.save();
-        return user;
+        this.getUser(userId, username);
+        this.data.profiles[userId].registered = true;
+        this.data.profiles[userId].name = username;
+        this.data.profiles[userId].age = age;
+        await this.save('profiles');
     }
 
     async setRole(userId, role) {
-        const user = this.getUser(userId);
-        user.info.role = role;
-        await this.save();
-        return user;
+        this.getUser(userId);
+        this.data.profiles[userId].role = role;
+        await this.save('profiles');
     }
 
     async setBan(userId, status) {
-        const user = this.getUser(userId);
-        user.info.banned = status;
-        await this.save();
-        return user;
+        this.getUser(userId);
+        this.data.profiles[userId].banned = status;
+        await this.save('profiles');
     }
 
     async setBio(userId, bio) {
-        const user = this.getUser(userId);
-        user.info.bio = bio;
-        await this.save();
-        return user;
-    }
-
-    async updateUser(userId, data) {
-        // This is a generic update, might need to be more specific with nested objects
-        const user = this.getUser(userId);
-        // Deep merge logic could be added here if needed
-        await this.save();
+        this.getUser(userId);
+        this.data.profiles[userId].bio = bio;
+        await this.save('profiles');
     }
 
     async addMoney(userId, amount, type = 'wallet') {
-        const user = this.getUser(userId);
-        user.economy[type] += amount;
-        await this.save();
-        return user.economy[type];
+        this.getUser(userId);
+        this.data.balances[userId][type] += amount;
+        await this.save('balances');
+        return this.data.balances[userId][type];
     }
 
     async removeMoney(userId, amount, type = 'wallet') {
-        const user = this.getUser(userId);
-        if (user.economy[type] < amount) return false;
-        user.economy[type] -= amount;
-        await this.save();
+        this.getUser(userId);
+        if (this.data.balances[userId][type] < amount) return false;
+        this.data.balances[userId][type] -= amount;
+        await this.save('balances');
         return true;
+    }
+
+    async updateUser(userId, data) {
+        this.getUser(userId);
+        const timerKeys = ['lastDaily', 'lastWeekly', 'lastWork', 'lastCrime'];
+        let timerUpdated = false;
+        for (const key of timerKeys) {
+            if (data[key] !== undefined) {
+                this.data.timers[userId][key] = data[key];
+                timerUpdated = true;
+            }
+        }
+        if (timerUpdated) await this.save('timers');
+
+        const infoKeys = ['name', 'registered', 'role', 'bio', 'age', 'banned'];
+        let infoUpdated = false;
+        for (const key of infoKeys) {
+            if (data[key] !== undefined) {
+                this.data.profiles[userId][key] = data[key];
+                infoUpdated = true;
+            }
+        }
+        if (infoUpdated) await this.save('profiles');
     }
 
     async addItem(userId, item) {
-        const user = this.getUser(userId);
-        user.economy.inventory.push(item);
-        await this.save();
+        this.getUser(userId);
+        this.data.balances[userId].inventory.push(item);
+        await this.save('balances');
     }
 
     async removeItem(userId, itemName) {
-        const user = this.getUser(userId);
-        const index = user.economy.inventory.findIndex(i => i.name === itemName);
+        this.getUser(userId);
+        const index = this.data.balances[userId].inventory.findIndex(i => i.name === itemName);
         if (index === -1) return false;
-        user.economy.inventory.splice(index, 1);
-        await this.save();
+        this.data.balances[userId].inventory.splice(index, 1);
+        await this.save('balances');
         return true;
     }
 
-    getShop() {
-        return this.data.shop;
-    }
-
-    async addShopItem(id, item) {
-        this.data.shop[id] = item;
-        await this.save();
-    }
-
-    async removeShopItem(id) {
-        delete this.data.shop[id];
-        await this.save();
-    }
+    getShop() { return this.data.shop; }
+    async addShopItem(id, item) { this.data.shop[id] = item; await this.save('shop'); }
+    async removeShopItem(id) { delete this.data.shop[id]; await this.save('shop'); }
 
     async createTicket(channelId, userId) {
-        this.data.tickets[channelId] = {
-            userId: userId,
-            createdAt: Date.now()
-        };
-        await this.save();
+        this.data.tickets[channelId] = { userId, createdAt: Date.now() };
+        await this.save('tickets');
     }
-
-    async deleteTicket(channelId) {
-        delete this.data.tickets[channelId];
-        await this.save();
-    }
-
-    getTicket(channelId) {
-        return this.data.tickets[channelId];
-    }
+    async deleteTicket(channelId) { delete this.data.tickets[channelId]; await this.save('tickets'); }
+    getTicket(channelId) { return this.data.tickets[channelId]; }
 
     getLeaderboard(type = 'wallet', limit = 10) {
-        return Object.entries(this.data.users)
-            .sort((a, b) => (b[1].economy[type] || 0) - (a[1].economy[type] || 0))
+        return Object.entries(this.data.balances)
+            .sort((a, b) => (b[1][type] || 0) - (a[1][type] || 0))
             .slice(0, limit);
     }
 }
 
-module.exports = Database;
+module.exports = MultiDatabase;

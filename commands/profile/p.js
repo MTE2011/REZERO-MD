@@ -20,17 +20,15 @@ module.exports = {
         const info = userData.info;
         const economy = userData.economy;
 
+        // Box design with "USER PROFILE" at the top
+        // Optimized to show essential info clearly
         const card = [
-            `╭・👑 ROYAL CARD`,
-            `┃・NAME: ${info.name}`,
-            `┃・AGE: ${info.age}`,
-            `┃・ROLE: ${info.role}`,
-            `┃・`,
-            `┃・💳 WALLET: $${formatMoney(economy.wallet)}`,
-            `┃・🏦 BANK: $${formatMoney(economy.bank)}`,
-            `┃・BIO: ${info.bio}`,
-            `┃・STATUS: ${info.banned ? '🚫 BANNED' : '✅ ACTIVE'}`,
-            `╰・────────────`
+            `╔════════ USER PROFILE ════════╗`,
+            `║ 👤 NAME: ${info.name.padEnd(20)} ║`,
+            `║ 🎂 AGE: ${String(info.age).padEnd(21)} ║`,
+            `║ 🎭 ROLE: ${info.role.padEnd(20)} ║`,
+            `║ 💰 BAL: $${formatMoney(economy.wallet).padEnd(20)} ║`,
+            `╚══════════════════════════════╝`
         ].join('\n');
 
         message.reply(`\`\`\`\n${card}\n\`\`\``);
