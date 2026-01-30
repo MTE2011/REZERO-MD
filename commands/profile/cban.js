@@ -8,7 +8,8 @@ module.exports = {
         const isMod = user.info.role === 'MOD' || user.info.role === 'OWNER';
 
         if (!isOwner && !isMod) {
-            return message.reply('❌ You don\'t have permission to use this command!');
+            return message.reply('❌ You don\'t have permission to use this command bak...
+                                 !');
         }
 
         const target = message.mentions.users.first();
