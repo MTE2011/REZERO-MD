@@ -20,17 +20,26 @@ module.exports = {
         const info = userData.info;
         const economy = userData.economy;
 
-        // Box design with "USER PROFILE" at the top
-        // Optimized to show essential info clearly
-        const card = [
-            `╔════════ USER PROFILE ════════╗`,
-            `║ 👤 NAME: ${info.name.padEnd(20)} ║`,
-            `║ 🎂 AGE: ${String(info.age).padEnd(21)} ║`,
-            `║ 🎭 ROLE: ${info.role.padEnd(20)} ║`,
-            `║ 💰 BAL: $${formatMoney(economy.wallet).padEnd(20)} ║`,
-            `╚══════════════════════════════╝`
+        // Content using the original font style (fixed-width/mono)
+        const content = [
+            `👑 **USER PROFILE**`,
+            `• NAME: ${info.name}`,
+            `• AGE: ${info.age}`,
+            `• ROLE: ${info.role}`,
+            `.`,
+            `💳 WALLET: $${formatMoney(economy.wallet)}`,
+            `🏦 BANK: $${formatMoney(economy.bank)}`,
+            `📜 BIO: ${info.bio}`,
+            `✅ STATUS: ${info.banned ? '🚫 BANNED' : '✅ ACTIVE'}`,
+            `────────────`
         ].join('\n');
 
-        message.reply(`\`\`\`\n${card}\n\`\`\``);
+        const embed = {
+            color: 0x0099ff, // Blue color for the side line
+            description: content,
+            timestamp: new Date()
+        };
+
+        message.reply({ embeds: [embed] });
     }
 };

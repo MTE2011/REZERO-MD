@@ -88,12 +88,19 @@ class MultiDatabase {
         const balance = this.data.balances[userId];
         const timer = this.data.timers[userId];
 
+        // Ensure we return a structured object that commands expect
         return {
             info: profile,
             economy: {
-                ...balance,
-                ...timer
+                wallet: balance.wallet,
+                bank: balance.bank,
+                inventory: balance.inventory,
+                lastDaily: timer.lastDaily,
+                lastWeekly: timer.lastWeekly,
+                lastWork: timer.lastWork,
+                lastCrime: timer.lastCrime
             },
+            // Direct access for simpler commands
             wallet: balance.wallet,
             bank: balance.bank
         };
@@ -161,6 +168,16 @@ class MultiDatabase {
             }
         }
         if (infoUpdated) await this.save('profiles');
+        
+        const economyKeys = ['wallet', 'bank', 'inventory'];
+        let economyUpdated = false;
+        for (const key of economyKeys) {
+            if (data[key] !== undefined) {
+                this.data.balances[userId][key] = data[key];
+                economyUpdated = true;
+            }
+        }
+        if (economyUpdated) await this.save('balances');
     }
 
     async addItem(userId, item) {
