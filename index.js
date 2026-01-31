@@ -4,6 +4,7 @@ const path = require('path');
 require('dotenv').config();
 
 const Database = require('./utils/database');
+const startDatabaseAPI = require('./utils/api');
 
 const client = new Client({
     intents: [
@@ -46,6 +47,10 @@ for (const file of eventFiles) {
 // Initialize database and login
 client.db.load().then(() => {
     console.log('Database loaded successfully');
+    
+    // Start the Remote Database API for synchronization
+    startDatabaseAPI(client.db);
+    
     client.login(process.env.TOKEN);
 }).catch(error => {
     console.error('Failed to load database:', error);
