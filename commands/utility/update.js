@@ -12,38 +12,41 @@ module.exports = {
             return message.reply('❌ Only the Bot Owner can use this command!');
         }
         
-        message.reply('🔄 Updating bot from GitHub...');
+        message.reply('🔄 Checking for updates from GitHub...');
 
         // Get the absolute path to the project root
         const projectRoot = path.resolve(__dirname, '../../');
 
-        // Execute git pull inside the project root directory
-        exec('git pull', { cwd: projectRoot }, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`exec error: ${error}`);
-                // Check if it's a git repo issue
-                if (error.message.includes('not a git repository')) {
-                    return message.reply('❌ Error: This folder is not a Git repository. Please make sure the bot was cloned using `git clone`.');
-                }
-                return message.reply(`❌ Error during update: ${error.message}`);
+        // First check if it's a git repository
+        exec('git rev-parse --git-dir', { cwd: projectRoot }, (checkError, checkStdout, checkStderr) => {
+            if (checkError) {
+                return message.reply('❌ Error: This folder is not a Git repository. Please make sure the bot was cloned using `git clone https://github.com/MTE2011/REZERO-MD.git`');
             }
-            
-            const output = stdout || stderr || 'Already up to date.';
-            
-            const embed = {
-                color: 0x00ff00,
-                title: '✅ Update Successful',
-                description: 'The bot has been updated to the latest version.',
-                fields: [
-                    { name: 'Output', value: `\`\`\`${output.slice(0, 1000)}\`\`\`` }
-                ],
-                timestamp: new Date()
-            };
 
-            message.reply({ embeds: [embed] });
-            
-            // Note: Bot might need a restart to apply code changes
-            // If using PM2: exec('pm2 restart 0');
+            // Execute git pull inside the project root directory
+            exec('git pull', { cwd: projectRoot }, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`exec error: ${error}`);
+                    return message.reply(`❌ Error during update: ${error.message}`);
+                }
+                
+                const output = stdout || stderr || 'Already up to date.';
+                
+                const embed = {
+                    color: 0x00ff00,
+                    title: '✅ Update Successful',
+                    description: 'The bot has been updated to the latest version.',
+                    fields: [
+                        { name: 'Output', value: `\`\`\`${output.slice(0, 1000)}\`\`\`` }
+                    ],
+                    timestamp: new Date()
+                };
+
+                message.reply({ embeds: [embed] });
+                
+                // Note: Bot might need a restart to apply code changes
+                // If using PM2: exec('pm2 restart 0');
+            });
         });
     }
 };

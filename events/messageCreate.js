@@ -14,7 +14,7 @@ module.exports = {
 
         // Royal Card Check for Economy and Gambling commands
         if (command.category === 'economy' || command.category === 'gambling') {
-            const user = client.db.getUser(message.author.id, message.author.username);
+            const user = await client.db.getUser(message.author.id, message.author.username);
             
             if (!user.info.registered) {
                 return message.reply("⚠️ Sorry, you don't have a Royal Card. Please register first using `.reg <age>`.");
