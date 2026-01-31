@@ -37,6 +37,9 @@ module.exports = {
         const embed = {
             color: 0x0099ff, // Blue color for the side line
             description: content,
+            image: {
+                url: target.displayAvatarURL({ dynamic: true, size: 1024 })
+            },
             timestamp: new Date()
         };
 
