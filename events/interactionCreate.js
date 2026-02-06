@@ -37,6 +37,7 @@ module.exports = {
                                 { label: 'Report', value: 'report', emoji: '🚩', description: 'Report a user or incident' },
                                 { label: 'Buy', value: 'buy', emoji: '💰', description: 'Inquiries about purchases' },
                                 { label: 'Appeal', value: 'appeal', emoji: '⚖️', description: 'Appeal a ban or warning' },
+                                { label: 'Partnership', value: 'partnership', emoji: '🤝', description: 'Partnership inquiries' },
                                 { label: 'Other', value: 'other', emoji: '❓', description: 'Anything else' },
                             ])
                     );

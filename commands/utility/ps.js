@@ -3,10 +3,22 @@ const { EmbedBuilder } = require("discord.js");
 module.exports = {
   name: "ps",
   category: "moderation",
+  description: "Send a partnership announcement",
   async execute(message, args, client) {
 
-    const OWNER_ID = process.env.OWNER || "1456281647400882290"; // set in .env
-    const GUARDS_IDS = process.env.GUARDS ? process.env.GUARDS.split(",") : []; // comma separated IDs in .env
+    // ===== CONFIG =====
+    // Main owner of the bot
+    const OWNER_ID = process.env.OWNER_ID;
+    
+    // Guards (Moderators who can access tickets and use moderation commands)
+    const GUARDS_IDS = process.env.GUARDS_ID ? process.env.GUARDS_ID.split(",") : [];
+
+    // Channel for partnership tickets
+    const CHANNEL_ID = process.env.PARTNERSHIP_CHANNEL_ID;
+    
+    // Role to ping for partnerships
+    const ROLE_ID = process.env.PARTNER_ROLE_ID;
+    // ==================
 
     // Permission check
     if (![OWNER_ID, ...GUARDS_IDS].includes(message.author.id)) {
@@ -20,12 +32,8 @@ module.exports = {
 
     const adMessage = args.join(" ");
 
-    // Target channel and role
-    const CHANNEL_ID = "1467033138004758570";
-    const ROLE_ID = "1467047729145319528";
-
     const channel = message.guild.channels.cache.get(CHANNEL_ID);
-    if (!channel) return message.reply("❌ Partnership channel not found.");
+    if (!channel) return message.reply("❌ Partnership channel not found. Please check PARTNERSHIP_CHANNEL_ID in .env");
 
     // Embed
     const embed = new EmbedBuilder()
@@ -36,7 +44,11 @@ module.exports = {
       .setTimestamp();
 
     // Send embed and tag the role
-    await channel.send({ content: `<@&${ROLE_ID}>`, embeds: [embed] });
+    await channel.send({ 
+      content: ROLE_ID ? `<@&${ROLE_ID}>` : "@everyone", 
+      embeds: [embed],
+      allowedMentions: { parse: ["roles", "everyone"] }
+    });
 
     // Confirmation
     message.reply("✅ Partnership message sent successfully.");

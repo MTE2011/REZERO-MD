@@ -7,12 +7,16 @@ module.exports = {
   async execute(message, args, client) {
 
     // ===== CONFIG =====
-    const OWNER_ID = process.env.OWNER || "1456281647400882290";
-    const GUARDS_IDS = process.env.GUARDS
-      ? process.env.GUARDS.split(",")
+    // Main owner of the bot
+    const OWNER_ID = process.env.OWNER_ID;
+    
+    // Guards (Moderators who can access tickets and use moderation commands)
+    const GUARDS_IDS = process.env.GUARDS_ID
+      ? process.env.GUARDS_ID.split(",")
       : [];
 
-    const CHANNEL_ID = "1467040814600290336"; // News channel
+    // Channel for news messages
+    const CHANNEL_ID = process.env.NEWS_CHANNEL_ID;
     // ==================
 
     // Permission check
@@ -30,7 +34,7 @@ module.exports = {
     // Get channel
     const channel = message.guild.channels.cache.get(CHANNEL_ID);
     if (!channel) {
-      return message.reply("❌ News channel not found.");
+      return message.reply("❌ News channel not found. Please check NEWS_CHANNEL_ID in .env");
     }
 
     // Create embed
