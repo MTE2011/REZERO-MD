@@ -88,10 +88,20 @@ module.exports = {
                         }
 
                         if (customId === 'close_ticket') {
-                            setTimeout(async () => {
+                            // Delete from database immediately
+                            if (client.db.data.tickets && client.db.data.tickets[channel.id]) {
                                 delete client.db.data.tickets[channel.id];
                                 await client.db.save();
-                                await channel.delete().catch(() => {});
+                            }
+
+                            // Delete the channel after a short delay (5 seconds)
+                            setTimeout(async () => {
+                                try {
+                                    await channel.delete();
+                                    console.log(`[Ticket] Channel deleted: ${channel.id}`);
+                                } catch (err) {
+                                    console.error('[Ticket] Error deleting channel:', err);
+                                }
                             }, 5000);
                         }
                     }
